@@ -28,8 +28,15 @@ module.exports = grammar({
     ),
     
     _statement: $ => choice(
+      $.assignment_statement,
       $.return_statement
       // TODO: other kinds of statements
+    ),
+    assignment_statement: $ => seq(
+      $.identifier,
+      ':=',
+      $._expression
+
     ),
 
     return_statement: $ => seq(
@@ -58,7 +65,7 @@ module.exports = grammar({
         // ...
       ),
 
-    identifier: $ => /[a-z_][a-z0-9_]*/i,
+    identifier: $ => /[A-Za-z_][A-Za-z0-9_]*/,
 
     number: $ => /\d+/
   }

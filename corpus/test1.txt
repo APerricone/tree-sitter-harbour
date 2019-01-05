@@ -28,3 +28,23 @@ return a+b*5
     (return_statement 
       (binary_expression (identifier) 
         (binary_expression (identifier) (number))))))
+
+==================
+local and statement
+==================
+func funName(a,b)
+  local x
+  x:=b*5
+return a+x
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list (identifier) (identifier))
+    (local_list (identifier))
+    (assignment_statement (identifier) 
+      (binary_expression (identifier) (number)))
+    (return_statement 
+      (binary_expression (identifier) (identifier)))))
