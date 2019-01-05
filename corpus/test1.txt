@@ -1,10 +1,8 @@
 ==================
 Return statements
 ==================
-
 func x()
 return 1
-
 ---
 
 (source_file
@@ -18,7 +16,6 @@ params and expression
 ==================
 func x(a,b)
 return a+b*5
-
 ---
 
 (source_file
@@ -36,7 +33,6 @@ func funName(a,b)
   local x
   x:=b*5
 return a+x
-
 ---
 
 (source_file
