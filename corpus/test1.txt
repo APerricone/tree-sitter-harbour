@@ -1,0 +1,14 @@
+==================
+Return statements
+==================
+
+func x()
+return 1
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (return_statement (number))))
