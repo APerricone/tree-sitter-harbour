@@ -1,0 +1,36 @@
+==================
+one line // comments
+==================
+function pp() // cool function
+return 3.14 // pi-greek
+---
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list) (comment) 
+    (return_statement (number)) (comment)))
+==================
+one line && comments
+==================
+function pp() && cool function
+return 3.14 && pi-greek
+---
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list) (comment) 
+    (return_statement (number)) (comment)))
+==================
+/**/ comments
+==================
+/******
+cool function
+******/
+function /*declared*/ pp(/*parameters*/)
+return 3.14 /* pi-greek*/
+---
+(source_file (comment)
+  (function_definition (comment)
+    (identifier)
+    (parameter_list (comment)) 
+    (return_statement (number)) (comment)))

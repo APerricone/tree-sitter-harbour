@@ -9,6 +9,7 @@ module.exports = grammar({
     source_file: $ => repeat($._definition),
 
     _definition: $ => choice(
+      $._endline,
       $.function_definition,
       $.procedure_definition
       // TODO: other kinds of definitions
@@ -18,6 +19,7 @@ module.exports = grammar({
       /func(t(i(o(n)?)?)?)?/i,
       $.identifier,
       $.parameter_list,
+      $._endline,
       repeat($.local_list),
       repeat($._statementFunc)
     ),
@@ -26,6 +28,7 @@ module.exports = grammar({
       /proc(e(d(u(r(e)?)?)?)?)?/i,
       $.identifier,
       $.parameter_list,
+      $._endline,
       repeat($.local_list),
       repeat($._statementProc)
     ),
@@ -33,8 +36,7 @@ module.exports = grammar({
     parameter_list: $ => seq(
       '(',
       commaSep($.identifier),
-      ')',
-      $._endline
+      ')'
     ),
 
     local_list: $ => seq(
@@ -43,18 +45,19 @@ module.exports = grammar({
         $._endline
     ),
     
-    _statementProc: $ => choice(
+    _statementProc: $ => seq(choice(
       $.assignment_statement,
       $.function_call,
-      seq('return',$._endline)
+      $.return_none_statement
       // TODO: other kinds of statements
-    ),
-    _statementFunc: $ => choice(
+    ),$._endline),
+
+    _statementFunc: $ => seq(choice(
       $.assignment_statement,
-      seq($.function_call,$._endline),
+      $.function_call,
       $.return_statement
       // TODO: other kinds of statements
-    ),
+    ),$._endline),
 
     function_call: $ => seq(
       $.identifier,
@@ -66,15 +69,13 @@ module.exports = grammar({
     assignment_statement: $ => seq(
       $.identifier,
       ':=',
-      $._expression,
-      $._endline
+      $._expression
     ),
+    return_none_statement: $ => 'return',
 
     return_statement: $ => seq(
       'return',
-      $._expression,
-      $._endline
-    ),
+      $._expression),
 
     _expression: $ => choice(
       $.identifier,
@@ -100,13 +101,13 @@ module.exports = grammar({
 
     identifier: $ => /[A-Za-z_][A-Za-z0-9_]*/,
 
-    number: $ => /\d+/,
+    number: $ => /\d+(\.\d+)?/,
 
     _endline: $ => /[\r\n]{1,2}|;/,
 
     comment: $ => token(choice(
-      seq('//', /.*/),  
-      seq('&&', /.*/),
+      seq('//', /[^\r\n]*/),  
+      seq('&&', /[^\r\n]*/),
       // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
       seq(
         '/*',
