@@ -17,7 +17,7 @@ module.exports = grammar({
     ),
 
     function_definition: $ => seq(
-      /func(t(i(o(n)?)?)?)?/i,
+      caseInsensitive("func(t(i(o(n)?)?)?)?"),
       $.identifier,
       $.parameter_list,
       $._endline,
@@ -26,7 +26,7 @@ module.exports = grammar({
     ),
 
     procedure_definition: $ => seq(
-      /proc(e(d(u(r(e)?)?)?)?)?/i,
+      caseInsensitive("proc(e(d(u(r(e)?)?)?)?)?"),
       $.identifier,
       $.parameter_list,
       $._endline,
@@ -41,7 +41,7 @@ module.exports = grammar({
     ),
 
     local_list: $ => seq(
-        /loca(l)?/i,
+        caseInsensitive("loca(l)?"),
         commaSep1($.identifier),
         $._endline
     ),
@@ -72,10 +72,10 @@ module.exports = grammar({
       ':=',
       $._expression
     ),
-    return_none_statement: $ => 'return',
+    return_none_statement: $ => caseInsensitive('return'),
 
     return_statement: $ => seq(
-      'return',
+      caseInsensitive('return'),
       $._expression),
 
     _expression: $ => choice(
@@ -107,11 +107,11 @@ module.exports = grammar({
     _endline: $ => /[\r\n]{1,2}|;/,
     
     lineComment: $ => seq(
-      choice(/note/i,"*"),
+      choice(caseInsensitive("note"),"*"),
        /[^\r\n]*[\r\n]{1,2}/),
 
     comment: $ => token(choice(
-      seq(choice('//','&&'), /[^\r\n]*/),  
+      seq(choice('//','&&'), /[^\r\n]*/),
       // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
       // copied from tree-sitter-c
       seq(
@@ -122,7 +122,8 @@ module.exports = grammar({
     )),
     
     semicolonContinueline: $ => token(seq(
-      /;\s*/,
+      /;/,
+      optional(repeat(/\s+/)),
       /[\r\n]{1,2}/
     ))
   }
@@ -134,4 +135,19 @@ function commaSep(rule) {
   
 function commaSep1(rule) {
     return seq(rule, repeat(seq(',', rule)));
+}
+
+function toCaseInsensitive(a) {
+  var ca = a.charCodeAt(0);
+  if (ca>=97 && ca<=122) return `[${a}${a.toUpperCase()}]`;
+  if (ca>=65 && ca<= 90) return `[${a.toLowerCase()}${a}]`;
+  return a;
+}
+
+function caseInsensitive (keyword) {
+  return new RegExp(keyword
+    .split('')
+    .map(toCaseInsensitive)
+    .join('')
+  )
 }
