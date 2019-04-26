@@ -16,7 +16,8 @@
             "label": "parse current file",
             "type": "shell",
             "group": "none",
-            "command": "parse ${relativeFile}"
+            "command": "parse ${relativeFile}",
+            "problemMatcher": []
         },
         {
             "label": "run tests",
@@ -27,6 +28,5 @@
             },
             "command": "runTests"
         }
-
     ]
 }

@@ -3,13 +3,14 @@ module.exports = grammar({
   extras: $ => [
     /[ \t]/,
     $.comment,
-    $._semicolonEndline,
+    $.semicolonContinueline,
   ],
   rules: {
     source_file: $ => repeat($._definition),
 
     _definition: $ => choice(
       $._endline,
+      $.lineComment,
       $.function_definition,
       $.procedure_definition
       // TODO: other kinds of definitions
@@ -104,11 +105,15 @@ module.exports = grammar({
     number: $ => /\d+(\.\d+)?/,
 
     _endline: $ => /[\r\n]{1,2}|;/,
+    
+    lineComment: $ => seq(
+      choice(/note/i,"*"),
+       /[^\r\n]*[\r\n]{1,2}/),
 
     comment: $ => token(choice(
-      seq('//', /[^\r\n]*/),  
-      seq('&&', /[^\r\n]*/),
+      seq(choice('//','&&'), /[^\r\n]*/),  
       // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
+      // copied from tree-sitter-c
       seq(
         '/*',
         /[^*]*\*+([^/*][^*]*\*+)*/,
@@ -116,8 +121,8 @@ module.exports = grammar({
       )
     )),
     
-    _semicolonEndline: $ => token(seq(
-      ";",
+    semicolonContinueline: $ => token(seq(
+      /;\s*/,
       /[\r\n]{1,2}/
     ))
   }
