@@ -34,3 +34,31 @@ return 3.14 /* pi-greek*/
     (identifier)
     (parameter_list (comment)) 
     (return_statement (number)) (comment)))
+==================
+* comments
+==================
+* cool function
+function pp()
+* pi-greek
+return 3.14
+---
+(source_file (lineComment)
+  (function_definition
+    (identifier)
+    (parameter_list) 
+    (lineComment)
+    (return_statement (number))))
+==================
+note comments
+==================
+note cool function
+function pp()
+NOTE pi-greek
+return 3.14
+---
+(source_file (lineComment)
+  (function_definition
+    (identifier)
+    (parameter_list) 
+    (lineComment)
+    (return_statement (number))))

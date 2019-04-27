@@ -1,1 +1,1 @@
-call .\node_modules\.bin\tree-sitter parse %1
+call .\node_modules\.bin\tree-sitter parse %1 %2

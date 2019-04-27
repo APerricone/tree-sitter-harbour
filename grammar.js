@@ -9,29 +9,19 @@ module.exports = grammar({
     source_file: $ => repeat($._definition),
 
     _definition: $ => choice(
-      $._endline,
       $.lineComment,
-      $.function_definition,
-      $.procedure_definition
+      $._endline,
+      $.function_definition
       // TODO: other kinds of definitions
     ),
 
     function_definition: $ => seq(
-      caseInsensitive("func(t(i(o(n)?)?)?)?"),
+      caseInsensitive("func(t(i(o(n)?)?)?)?|proc(e(d(u(r(e)?)?)?)?)?"),
       $.identifier,
       $.parameter_list,
       $._endline,
       repeat($.local_list),
-      repeat($._statementFunc)
-    ),
-
-    procedure_definition: $ => seq(
-      caseInsensitive("proc(e(d(u(r(e)?)?)?)?)?"),
-      $.identifier,
-      $.parameter_list,
-      $._endline,
-      repeat($.local_list),
-      repeat($._statementProc)
+      repeat($._statements)
     ),
 
     parameter_list: $ => seq(
@@ -46,14 +36,7 @@ module.exports = grammar({
         $._endline
     ),
     
-    _statementProc: $ => seq(choice(
-      $.assignment_statement,
-      $.function_call,
-      $.return_none_statement
-      // TODO: other kinds of statements
-    ),$._endline),
-
-    _statementFunc: $ => seq(choice(
+    _statements: $ => seq(choice(
       $.assignment_statement,
       $.function_call,
       $.return_statement
@@ -72,11 +55,10 @@ module.exports = grammar({
       ':=',
       $._expression
     ),
-    return_none_statement: $ => caseInsensitive('return'),
 
     return_statement: $ => seq(
       caseInsensitive('return'),
-      $._expression),
+      optional($._expression)),
 
     _expression: $ => choice(
       $.identifier,
@@ -104,14 +86,15 @@ module.exports = grammar({
 
     number: $ => /\d+(\.\d+)?/,
 
-    _endline: $ => /[\r\n]{1,2}|;/,
+    _endline: $ => choice(
+        prec.right(seq(/[\r\n]{1,2}/,repeat($.lineComment))),';'),
     
-    lineComment: $ => seq(
-      choice(caseInsensitive("note"),"*"),
-       /[^\r\n]*[\r\n]{1,2}/),
+    lineComment: $ => token(seq(
+      caseInsensitive("note|\\*"),
+       /[^\r\n]*[\r\n]{1,2}/)),
 
     comment: $ => token(choice(
-      seq(choice('//','&&'), /[^\r\n]*/),
+      seq(/(\/\/|&&)/, /[^\r\n]*/),
       // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
       // copied from tree-sitter-c
       seq(
@@ -123,7 +106,7 @@ module.exports = grammar({
     
     semicolonContinueline: $ => token(seq(
       /;/,
-      optional(repeat(/\s+/)),
+      repeat(/\s+/),
       /[\r\n]{1,2}/
     ))
   }
