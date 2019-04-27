@@ -1,5 +1,4 @@
-* test1
-func funName(a, b)
-  local x && defined local
-  x:=b*5 // multiplication
-return a+func2(x)
+proc funName()
+  local x := Array(1), y, z:= 5
+  x[1] := 4
+return

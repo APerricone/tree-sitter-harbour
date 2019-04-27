@@ -32,9 +32,11 @@ module.exports = grammar({
 
     local_list: $ => seq(
         caseInsensitive("loca(l)?"),
-        commaSep1($.identifier),
+        commaSep1($._variableDef),
         $._endline
     ),
+
+    _variableDef: $ => choice($.identifier, $.assignment_statement),
     
     _statements: $ => seq(choice(
       $.assignment_statement,
@@ -51,7 +53,7 @@ module.exports = grammar({
     ),
 
     assignment_statement: $ => seq(
-      $.identifier,
+      choice($.identifier,$.hash_or_array),
       ':=',
       $._expression
     ),
@@ -62,12 +64,16 @@ module.exports = grammar({
 
     _expression: $ => choice(
       $.identifier,
+      $.hash_or_array,
       $.unary_expression,
       $.binary_expression,
       $.number,
+      $.string,
       $.function_call
       // TODO: other kinds of expressions
     ),
+
+
     unary_expression: $ => prec(3, choice(
         seq('-', $._expression),
         seq('!', $._expression),
@@ -85,6 +91,11 @@ module.exports = grammar({
     identifier: $ => /[A-Za-z_][A-Za-z0-9_]*/,
 
     number: $ => /\d+(\.\d+)?/,
+
+    string: $ => choice(
+      /"[^"]*"/,/'[^']*'/,/\[[^\[]*\]/
+    ),
+    hash_or_array: $ => seq($.identifier,"[",commaSep1(choice($.string,$.number)),"]"),
 
     _endline: $ => choice(
         prec.right(seq(/[\r\n]{1,2}/,repeat($.lineComment))),';'),
