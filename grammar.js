@@ -102,7 +102,8 @@ module.exports = grammar({
       /\{\^[^\}]*\}/
     ),
 
-    hash_or_array: $ => seq($.identifier,"[",commaSep1(choice($.string,$.number)),"]"),
+    //theoretically it is possible use datetime as index 
+    hash_or_array: $ => seq($.identifier,repeat1(seq("[",commaSep1(choice($.string,$.number)),"]"))),
 
     _endline: $ => choice(
         prec.right(seq(/[\r\n]{1,2}/,repeat($.lineComment))),';'),

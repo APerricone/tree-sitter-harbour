@@ -75,3 +75,20 @@ return
     (local_list (identifier) )
     (assignment_statement (hash_or_array (identifier) (number)) (hash_or_array (identifier) (string)))
     (return_statement)))
+
+==================
+ array and hash 2
+==================
+proc funName()
+  local x
+  x[1][2] := x["1","2"]
+return
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (local_list (identifier) )
+    (assignment_statement (hash_or_array (identifier) (number) (number)) (hash_or_array (identifier) (string) (string)))
+    (return_statement)))
