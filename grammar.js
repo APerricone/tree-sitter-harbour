@@ -69,6 +69,7 @@ module.exports = grammar({
       $.binary_expression,
       $.number,
       $.string,
+      $.datetime,
       $.function_call
       // TODO: other kinds of expressions
     ),
@@ -95,6 +96,12 @@ module.exports = grammar({
     string: $ => choice(
       /"[^"]*"/,/'[^']*'/,/\[[^\[]*\]/
     ),
+
+    datetime: $=>choice(
+      /[tTdD]"[^"]*"/,
+      /\{\^[^\}]*\}/
+    ),
+
     hash_or_array: $ => seq($.identifier,"[",commaSep1(choice($.string,$.number)),"]"),
 
     _endline: $ => choice(

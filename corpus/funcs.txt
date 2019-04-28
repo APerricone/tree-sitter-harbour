@@ -63,19 +63,3 @@ return
       (assignment_statement (identifier) (number)))
     (return_statement)))
 
-==================
- array and hash
-==================
-proc funName()
-  local x
-  x[1] := x["2"]
-return
----
-
-(source_file
-  (function_definition
-    (identifier)
-    (parameter_list)
-    (local_list (identifier) )
-    (assignment_statement (hash_or_array (identifier) (number)) (hash_or_array (identifier) (string)))
-    (return_statement)))

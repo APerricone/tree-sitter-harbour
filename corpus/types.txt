@@ -1,0 +1,77 @@
+==================
+ numbers
+==================
+proc func()
+    local x
+    x:=1
+    x:=2.4
+return
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (local_list (identifier) )
+    (assignment_statement (identifier) (number))
+    (assignment_statement (identifier) (number))
+    (return_statement)))
+
+==================
+ strings
+==================
+proc func()
+    local x
+    x:="double quote"
+    x:='single quote'
+    x:=[square parentesis]
+return
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (local_list (identifier) )
+    (assignment_statement (identifier) (string))
+    (assignment_statement (identifier) (string))
+    (assignment_statement (identifier) (string))
+    (return_statement)))
+
+==================
+ datetime
+==================
+proc func()
+    local x
+    x := d"2018-11-26"
+    x := t"2018-11-26 13:25:34.234"
+    x := {^ 2018-11-26 13:25:34.234 }
+return
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (local_list (identifier) )
+    (assignment_statement (identifier) (datetime))
+    (assignment_statement (identifier) (datetime))
+    (assignment_statement (identifier) (datetime))
+    (return_statement)))
+
+==================
+ array and hash
+==================
+proc funName()
+  local x
+  x[1] := x["2"]
+return
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (local_list (identifier) )
+    (assignment_statement (hash_or_array (identifier) (number)) (hash_or_array (identifier) (string)))
+    (return_statement)))
