@@ -1,0 +1,14 @@
+==================
+include
+==================
+#include "prova.ch"
+#include 'prova.ch'
+#include [prova.ch]
+#include <prova.ch>
+---
+(source_file
+  (preproc_include (string))
+  (preproc_include (string))
+  (preproc_include (string))
+  (preproc_include (string)))
+

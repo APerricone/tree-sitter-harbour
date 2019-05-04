@@ -9,11 +9,15 @@ module.exports = grammar({
     source_file: $ => repeat($._definition),
 
     _definition: $ => choice(
+      $.preproc_include,
       $.lineComment,
       $._endline,
       $.function_definition
       // TODO: other kinds of definitions
     ),
+
+    preproc_include: $ => seq('#',caseInsensitive('include'),
+      choice($.string,alias(/<[^>]*>/,$.string))),
 
     function_definition: $ => seq(
       caseInsensitive("func(t(i(o(n)?)?)?)?|proc(e(d(u(r(e)?)?)?)?)?"),
