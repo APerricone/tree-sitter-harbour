@@ -10,6 +10,7 @@ module.exports = grammar({
 
     _definition: $ => choice(
       $.preproc_include,
+      $.preproc_define,
       $.lineComment,
       $._endline,
       $.function_definition
@@ -17,7 +18,9 @@ module.exports = grammar({
     ),
 
     preproc_include: $ => seq('#',caseInsensitive('include'),
-      choice($.string,alias(/<[^>]*>/,$.string))),
+      choice($.string,alias(/<[^>]*>/,$.string)),$._endline),
+
+    preproc_define: $ => seq('#',caseInsensitive('define'),$.identifier,$._expression,$._endline),
 
     function_definition: $ => seq(
       caseInsensitive("func(t(i(o(n)?)?)?)?|proc(e(d(u(r(e)?)?)?)?)?"),
@@ -110,8 +113,8 @@ module.exports = grammar({
     hash_or_array: $ => seq($.identifier,repeat1(seq("[",commaSep1(choice($.string,$.number)),"]"))),
 
     _endline: $ => choice(
-        prec.right(seq(/[\r\n]{1,2}/,repeat($.lineComment))),';'),
-    
+        prec.right(seq(/[\r\n]{1,2}/,repeat($.lineComment))),$.semicolonSeparator),
+    semicolonSeparator: $ => ';',
     lineComment: $ => token(seq(
       caseInsensitive("note|\\*"),
        /[^\r\n]*[\r\n]{1,2}/)),

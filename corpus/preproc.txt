@@ -10,5 +10,16 @@ include
   (preproc_include (string))
   (preproc_include (string))
   (preproc_include (string))
-  (preproc_include (string)))
+  (preproc_include (string))
+)
 
+==================
+define
+==================
+#define CALLFN funName(23)
+#define NUM 5
+---
+(source_file
+  (preproc_define (identifier) (function_call (identifier) (number)))
+  (preproc_define (identifier) (number))
+)

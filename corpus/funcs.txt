@@ -63,3 +63,23 @@ return
       (assignment_statement (identifier) (number)))
     (return_statement)))
 
+==================
+semicolon
+==================
+func swap(param1, ;
+          param2)
+  local x
+  x:=param2 ; param2:=param1; param1:=x
+return
+---
+(source_file
+  (function_definition (identifier)
+    (parameter_list (identifier) (semicolonContinueline) (identifier))
+    (local_list (identifier ))
+    (assignment_statement (identifier) (identifier))
+    (semicolonSeparator)
+    (assignment_statement (identifier) (identifier))
+    (semicolonSeparator)
+    (assignment_statement (identifier) (identifier))
+    (return_statement)
+))
