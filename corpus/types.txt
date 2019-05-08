@@ -60,7 +60,7 @@ return
     (return_statement)))
 
 ==================
- array and hash
+ array and hash use
 ==================
 proc funName()
   local x
@@ -73,11 +73,11 @@ return
     (identifier)
     (parameter_list)
     (local_list (identifier) )
-    (assignment_statement (hash_or_array (identifier) (number)) (hash_or_array (identifier) (string)))
+    (assignment_statement (hash_or_array_use (identifier) (number)) (hash_or_array_use (identifier) (string)))
     (return_statement)))
 
 ==================
- array and hash 2
+ array and hash use 2
 ==================
 proc funName()
   local x
@@ -90,5 +90,29 @@ return
     (identifier)
     (parameter_list)
     (local_list (identifier) )
-    (assignment_statement (hash_or_array (identifier) (number) (number)) (hash_or_array (identifier) (string) (string)))
+    (assignment_statement (hash_or_array_use (identifier) (number) (number)) (hash_or_array_use (identifier) (string) (string)))
     (return_statement)))
+
+==================
+ array and hash constant
+==================
+proc test()
+    local a
+    a := {}
+    a := {=>}
+    a := {"a"=>3}
+    a := {1,2,3}
+    a := {1=>"aa","aa"=>1}
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (local_list (identifier) )
+    (assignment_statement (identifier) (hash_or_array_constant))
+    (assignment_statement (identifier) (hash_or_array_constant (hash_element)))
+    (assignment_statement (identifier) (hash_or_array_constant (hash_element (string) (number))))
+    (assignment_statement (identifier) (hash_or_array_constant (number) (number) (number)))
+    (assignment_statement (identifier) (hash_or_array_constant (hash_element (number) (string)) (hash_element (string) (number))))
+    ))

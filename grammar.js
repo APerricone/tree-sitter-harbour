@@ -28,7 +28,7 @@ module.exports = grammar({
       $.parameter_list,
       $._endline,
       repeat($.local_list),
-      repeat($._statements)
+      repeat($._statement)
     ),
 
     parameter_list: $ => seq(
@@ -45,7 +45,7 @@ module.exports = grammar({
 
     _variableDef: $ => choice($.identifier, $.assignment_statement),
     
-    _statements: $ => seq(choice(
+    _statement: $ => seq(choice(
       $.assignment_statement,
       $.function_call,
       $.return_statement
@@ -60,7 +60,7 @@ module.exports = grammar({
     ),
 
     assignment_statement: $ => seq(
-      choice($.identifier,$.hash_or_array),
+      choice($.identifier,$.hash_or_array_use),
       ':=',
       $._expression
     ),
@@ -71,7 +71,8 @@ module.exports = grammar({
 
     _expression: $ => choice(
       $.identifier,
-      $.hash_or_array,
+      $.hash_or_array_use,
+      $.hash_or_array_constant,
       $.unary_expression,
       $.binary_expression,
       $.number,
@@ -110,11 +111,20 @@ module.exports = grammar({
     ),
 
     //theoretically it is possible use datetime as index 
-    hash_or_array: $ => seq($.identifier,repeat1(seq("[",commaSep1(choice($.string,$.number)),"]"))),
+    hash_or_array_use: $ => seq($.identifier,repeat1(seq("[",commaSep1(choice($.string,$.number)),"]"))),
+    hash_or_array_constant: $ => seq("{",choice(
+      alias("=>",$.hash_element),  //empty hash
+      commaSep(choice(
+        $._expression, // array element
+        $.hash_element // hash element
+      ))),"}"),
+      hash_element: $=> seq(choice($.string,$.number),"=>",$._expression),
 
     _endline: $ => choice(
         prec.right(seq(/[\r\n]{1,2}/,repeat($.lineComment))),$.semicolonSeparator),
+        
     semicolonSeparator: $ => ';',
+
     lineComment: $ => token(seq(
       caseInsensitive("note|\\*"),
        /[^\r\n]*[\r\n]{1,2}/)),
