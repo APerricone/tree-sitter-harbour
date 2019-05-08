@@ -73,7 +73,7 @@ return
     (identifier)
     (parameter_list)
     (local_list (identifier) )
-    (assignment_statement (hash_or_array_use (identifier) (number)) (hash_or_array_use (identifier) (string)))
+    (assignment_statement (hash_or_array_ref (identifier) (number)) (hash_or_array_ref (identifier) (string)))
     (return_statement)))
 
 ==================
@@ -90,7 +90,7 @@ return
     (identifier)
     (parameter_list)
     (local_list (identifier) )
-    (assignment_statement (hash_or_array_use (identifier) (number) (number)) (hash_or_array_use (identifier) (string) (string)))
+    (assignment_statement (hash_or_array_ref (identifier) (number) (number)) (hash_or_array_ref (identifier) (string) (string)))
     (return_statement)))
 
 ==================

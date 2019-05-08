@@ -60,7 +60,7 @@ module.exports = grammar({
     ),
 
     assignment_statement: $ => seq(
-      choice($.identifier,$.hash_or_array_use),
+      choice($.identifier,$.hash_or_array_ref),
       ':=',
       $._expression
     ),
@@ -71,7 +71,7 @@ module.exports = grammar({
 
     _expression: $ => choice(
       $.identifier,
-      $.hash_or_array_use,
+      $.hash_or_array_ref,
       $.hash_or_array_constant,
       $.unary_expression,
       $.binary_expression,
@@ -111,7 +111,7 @@ module.exports = grammar({
     ),
 
     //theoretically it is possible use datetime as index 
-    hash_or_array_use: $ => seq($.identifier,repeat1(seq("[",commaSep1(choice($.string,$.number)),"]"))),
+    hash_or_array_ref: $ => seq($.identifier,repeat1(seq("[",commaSep1(choice($.string,$.number)),"]"))),
     hash_or_array_constant: $ => seq("{",choice(
       alias("=>",$.hash_element),  //empty hash
       commaSep(choice(
